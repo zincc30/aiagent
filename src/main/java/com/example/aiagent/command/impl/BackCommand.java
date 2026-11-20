@@ -1,5 +1,6 @@
 package com.example.aiagent.command.impl;
 
+import com.example.aiagent.agent.AgentService;
 import com.example.aiagent.command.Command;
 import com.example.aiagent.command.CommandContext;
 import com.example.aiagent.command.CommandResult;
@@ -7,6 +8,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class BackCommand implements Command {
+    private final AgentService agentService;
+
+    public BackCommand(AgentService agentService) {
+        this.agentService = agentService;
+    }
+
     @Override
     public String name() {
         return "/back";
@@ -24,6 +31,7 @@ public class BackCommand implements Command {
 
     @Override
     public CommandResult execute(CommandContext context, String input) {
+        agentService.leaveChat();
         context.console().println("명령 메뉴로 돌아갑니다.");
         return CommandResult.LEAVE_CHAT;
     }
