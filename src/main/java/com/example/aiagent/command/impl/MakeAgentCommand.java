@@ -24,42 +24,29 @@ public class MakeAgentCommand implements Command {
 
     @Override
     public String description() {
-        return "에이전트 설정을 입력해 생성합니다";
+        return "에이전트 이름을 입력해 생성합니다";
     }
 
     @Override
     public CommandResult execute(CommandContext context, String input) throws IOException {
-        context.console().println("에이전트 설정을 입력하세요. 취소하려면 /cancel을 입력하세요.");
-        String name = readSetting(context, "이름", true);
-        if (name == null) return CommandResult.CONTINUE;
-        String personality = readSetting(context, "성격", true);
-        if (personality == null) return CommandResult.CONTINUE;
-        String goal = readSetting(context, "목표", true);
-        if (goal == null) return CommandResult.CONTINUE;
-        String speakingStyle = readSetting(context, "말투 (선택 사항)", false);
-        if (speakingStyle == null) return CommandResult.CONTINUE;
-        String belief = readSetting(context, "신념 (선택 사항)", false);
-        if (belief == null) return CommandResult.CONTINUE;
+        context.console().println("에이전트 이름을 입력하세요. 취소하려면 /cancel을 입력하세요.");
+        String name;
+        while (true) {
+            name = context.console().readLine("이름> ");
+            if (name == null || "/cancel".equalsIgnoreCase(name.trim())) {
+                context.console().println("에이전트 생성을 취소했습니다.");
+                return CommandResult.CONTINUE;
+            }
+            if (!name.isBlank()) {
+                break;
+            }
+            context.console().println("이름은 비워 둘 수 없습니다.");
+        }
 
-        Agent agent = new Agent(name, personality, goal, speakingStyle, belief);
+        Agent agent = new Agent(name);
         agentService.configureAgent(agent);
         context.console().printf("에이전트를 만들었습니다: %s (ID: %s)%n", agent.name(), agent.id());
-        context.console().println("새 에이전트 설정으로 대화 기록을 초기화했습니다.");
+        context.console().println("새 에이전트에 맞춰 대화 기록을 초기화했습니다.");
         return CommandResult.CONTINUE;
-    }
-
-    private String readSetting(CommandContext context, String label, boolean required)
-            throws IOException {
-        while (true) {
-            String value = context.console().readLine(label + "> ");
-            if (value == null || "/cancel".equalsIgnoreCase(value.trim())) {
-                context.console().println("에이전트 설정을 취소했습니다.");
-                return null;
-            }
-            if (!required || !value.isBlank()) {
-                return value.trim();
-            }
-            context.console().println(label + "은(는) 비워 둘 수 없습니다.");
-        }
     }
 }
