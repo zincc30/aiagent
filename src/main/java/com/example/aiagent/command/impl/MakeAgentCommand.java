@@ -24,22 +24,23 @@ public class MakeAgentCommand implements Command {
 
     @Override
     public String description() {
-        return "이름과 성격을 입력해 새 에이전트를 생성합니다";
+        return "이름, 성격, 관심사, 목표를 입력해 새 에이전트를 생성합니다";
     }
 
     @Override
     public CommandResult execute(CommandContext context, String input) throws IOException {
-        context.console().println("에이전트 이름과 성격을 입력하세요. 취소하려면 /cancel을 입력하세요.");
+        context.console().println(
+                "에이전트 이름, 성격, 관심사, 목표를 입력하세요. 취소하려면 /cancel을 입력하세요.");
         String name = readRequired(context, "이름");
-        if (name == null) {
-            return CommandResult.CONTINUE;
-        }
+        if (name == null) return CommandResult.CONTINUE;
         String personality = readRequired(context, "성격");
-        if (personality == null) {
-            return CommandResult.CONTINUE;
-        }
+        if (personality == null) return CommandResult.CONTINUE;
+        String interests = readRequired(context, "관심사");
+        if (interests == null) return CommandResult.CONTINUE;
+        String goal = readRequired(context, "목표");
+        if (goal == null) return CommandResult.CONTINUE;
 
-        Agent agent = agentService.createAgent(name, personality);
+        Agent agent = agentService.createAgent(name, personality, interests, goal);
         context.console().printf("에이전트를 만들었습니다: %s (ID: %s)%n",
                 agent.name(), agent.id());
         return CommandResult.CONTINUE;

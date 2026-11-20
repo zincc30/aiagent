@@ -10,3 +10,6 @@ openai:
     model: ${OPENAI_MODEL:gpt-4.1-mini}
 
 
+app:
+  agent:
+    config-path: ./data/agents.json

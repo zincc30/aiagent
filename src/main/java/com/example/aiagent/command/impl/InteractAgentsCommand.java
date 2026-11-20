@@ -51,7 +51,7 @@ public class InteractAgentsCommand implements Command {
             return CommandResult.CONTINUE;
         }
 
-        context.console().printf("상호작용 시작: %s ↔ %s (5회 왕복)%n",
+        context.console().printf("상호작용 시작: %s ↔ %s %n",
                 first.name(), second.name());
         try {
             interactionService.interact(first.id(), second.id(),

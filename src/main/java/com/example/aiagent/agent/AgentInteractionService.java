@@ -94,10 +94,10 @@ public class AgentInteractionService {
                 + partner.name() + " (ID: " + partner.id() + "). Say your first message.";
         return new ChatMessage("user", content);
     }
-
     private static ChatMessage peerMessage(Agent speaker, String content) {
         String attributedContent = "[Message from Agent " + speaker.name()
                 + " (ID: " + speaker.id() + ")]\n" + content;
         return new ChatMessage("user", attributedContent);
     }
 }
+
