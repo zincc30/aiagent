@@ -24,27 +24,38 @@ public class MakeAgentCommand implements Command {
 
     @Override
     public String description() {
-        return "이름으로 새 에이전트를 생성합니다";
+        return "이름과 성격을 입력해 새 에이전트를 생성합니다";
     }
 
     @Override
     public CommandResult execute(CommandContext context, String input) throws IOException {
-        context.console().println("에이전트 이름을 입력하세요. 취소하려면 /cancel을 입력하세요.");
-        while (true) {
-            String name = context.console().readLine("이름> ");
-            if (name == null || "/cancel".equalsIgnoreCase(name.trim())) {
-                context.console().println("에이전트 생성을 취소했습니다.");
-                return CommandResult.CONTINUE;
-            }
-            if (name.isBlank()) {
-                context.console().println("이름은 비워 둘 수 없습니다.");
-                continue;
-            }
-
-            Agent agent = agentService.createAgent(name);
-            context.console().printf("에이전트를 만들었습니다: %s (ID: %s)%n",
-                    agent.name(), agent.id());
+        context.console().println("에이전트 이름과 성격을 입력하세요. 취소하려면 /cancel을 입력하세요.");
+        String name = readRequired(context, "이름");
+        if (name == null) {
             return CommandResult.CONTINUE;
+        }
+        String personality = readRequired(context, "성격");
+        if (personality == null) {
+            return CommandResult.CONTINUE;
+        }
+
+        Agent agent = agentService.createAgent(name, personality);
+        context.console().printf("에이전트를 만들었습니다: %s (ID: %s)%n",
+                agent.name(), agent.id());
+        return CommandResult.CONTINUE;
+    }
+
+    private String readRequired(CommandContext context, String label) throws IOException {
+        while (true) {
+            String value = context.console().readLine(label + "> ");
+            if (value == null || "/cancel".equalsIgnoreCase(value.trim())) {
+                context.console().println("에이전트 생성을 취소했습니다.");
+                return null;
+            }
+            if (!value.isBlank()) {
+                return value.trim();
+            }
+            context.console().println(label + "은(는) 비워 둘 수 없습니다.");
         }
     }
 }

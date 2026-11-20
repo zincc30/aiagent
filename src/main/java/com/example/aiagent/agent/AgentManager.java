@@ -12,8 +12,8 @@ import java.util.UUID;
 public class AgentManager {
     private final Map<UUID, AgentSession> sessions = new LinkedHashMap<>();
 
-    public synchronized Agent createAgent(String name) {
-        Agent agent = new Agent(name);
+    public synchronized Agent createAgent(String name, String personality) {
+        Agent agent = new Agent(name, personality);
         sessions.put(agent.id(), new AgentSession(agent));
         return agent;
     }

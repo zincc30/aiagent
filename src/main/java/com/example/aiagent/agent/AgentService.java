@@ -24,8 +24,8 @@ public class AgentService {
         this.agentManager = agentManager;
     }
 
-    public Agent createAgent(String name) {
-        return agentManager.createAgent(name);
+    public Agent createAgent(String name, String personality) {
+        return agentManager.createAgent(name, personality);
     }
 
     public List<Agent> listAgents() {
